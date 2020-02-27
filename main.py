@@ -2,6 +2,7 @@ ROOMS = []
 
 CURRENT_ROOM = None
 
+
 class Thing:
     def __init__(self, id, ref, name, desc):
         self.id = id
@@ -9,16 +10,20 @@ class Thing:
         self.name = name
         self.desc = desc
 
-    def __str__(self):
-        return f'{self.__class__.__name__} ID {self.id}, {self.ref} ({self.name}): {self.desc}'
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.id=!r}, {self.ref=!r}, {self.name=!r}, {self.desc=!r})'
 
 
 class Room(Thing):
     def __init__(self, id, ref, name, desc, exits):
         super().__init__(id, ref, name, desc)
-        self.exits = exits
+        self.exits = [self.get_room(token) for token in exits]
         self.intro = f'You entered {name}: {desc}'
+
         ROOMS.append(self)
+
+    def __repr__(self):
+        return super().__repr__()[:-1] + f', {self.exits=})'
 
     @staticmethod
     def get_room(token):
@@ -44,6 +49,10 @@ class Room(Thing):
             return False
 
     def enter(self):
-        print(f'Entering "{self.name}"...')
+        print(self.intro)
         print(str(self))
+
+
+vardagsrum = Room(1, 'vardagsrum', 'Vardagsrum', 'Mitt vardagsrum', 'hall')
+
 
